@@ -5,7 +5,7 @@ use lib ('/sonas-hs/ware/hpc/home/mcampbel/lib');
 use Getopt::Std;
 use vars qw($opt_t $opt_c $opt_u $opt_s $opt_o $opt_v $opt_i);
 getopts('tc:u:sovi:');
-use PostData;
+#use PostData;
 use FileHandle;
 
 #-----------------------------------------------------------------------------
