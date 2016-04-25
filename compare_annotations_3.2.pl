@@ -21,8 +21,8 @@ VERSION 3 NOTE: I added sensitivity, specificity, and accuracy calculations
                 your specific contig, scaffold, or chromosome. I also added 
                 the option to run the script on a specific scaffold.
              
-USAGE:          MIKE_compare_annotations_3.pl <GFF3_file_a> <GFF3 file_b>
-                MIKE_compare_annotations_3.pl <GFF3_file_a>
+USAGE:          compare_annotations_3.pl <GFF3_file_a> <GFF3 file_b>
+                compare_annotations_3.pl <GFF3_file_a>
 
 OPTIONS:        -t (trim) standardize scaffold names. 
                 Note: you may need to alter the sub trim.
