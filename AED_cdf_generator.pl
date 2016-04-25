@@ -79,7 +79,9 @@ sub parse {
     while (defined(my $line = <$fh>)){
 	chomp($line);
 	last if $line =~ /^\#\#FASTA/;
-	if ($line =~ /_AED=(\d\.\d+?)\;/){
+	next if $line =~ /^\#/;
+	my @cols = split(/\t/, $line);
+	if ($cols[2] eq 'mRNA' && $line =~ /_AED=(\d\.\d+?)\;/){
 	    load($1, $file);
 	}
 	else {
