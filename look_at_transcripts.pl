@@ -11,6 +11,11 @@ use gff3_annotation_stuff_b;
 #----------------------------------- MAIN ------------------------------------
 #-----------------------------------------------------------------------------
 my $usage = "\n\n\t
+This script was developed while working on the B73 maize genome annotation. 
+It takes a gff3 file and returns a report describing the annotated transcripts.
+I've tested it on MAKER output and GFF3 from ensembl
+
+look_at_transcripts.pl <file.gff>
 
 \n\n";
 
