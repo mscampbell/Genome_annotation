@@ -1,10 +1,10 @@
 #!/usr/bin/perl -w 
 use strict;
-use lib ('/home/mcampbell/lib');
-#use PostData;
+use lib ('/sonas-hs/ware/hpc/home/mcampbel/lib');
+use PostData;
 use Getopt::Std;
-use vars qw($opt_i $opt_e $opt_g $opt_p $opt_c $opt_m $opt_u);
-getopts('iegpcmu');
+use vars qw($opt_i $opt_e $opt_g $opt_p $opt_c $opt_m $opt_s);
+getopts('iegpcms');
 use FileHandle;
 
 #-----------------------------------------------------------------------------
@@ -25,7 +25,7 @@ my %LU_T;
 build_lu_gid($FILE1);
 build_lu_tid($FILE2);
 filter($FILE2);
-#PostData(\%LU_G);
+#PostData(\%LU_T);
 #-----------------------------------------------------------------------------
 #---------------------------------- SUBS -------------------------------------
 #-----------------------------------------------------------------------------
@@ -47,7 +47,9 @@ sub filter{
 	    print $line."\n" if defined($LU_G{$id}); 
 	}
 	elsif ($array[2] eq 'mRNA' || $array[2] eq 'transcript'){
+	    
 	    my ($id) = $array[8] =~ /ID=(\S+?);/;
+	    $line =~ s/\ttranscript\t/\tmRNA\t/ if $opt_s;
 	    print $line."\n" if defined($LU_T{$id}); 
 	}
 	elsif ($array[2] eq 'exon'||
@@ -100,7 +102,7 @@ sub build_lu_tid{
         next if $line =~ /^\#/;
         my @array = split(/\t/, $line);
 
-        if ($array[2] =~ 'mRNA'){
+        if ($array[2] =~ 'mRNA' || $array[2] eq 'transcript'){
 	    my ($tid) = $line =~ /ID=(.+?);/;
             my ($gid) = $line =~ /Parent=(.+?);/;
 	    if (defined($LU_G{$gid})){

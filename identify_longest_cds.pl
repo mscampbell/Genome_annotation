@@ -36,7 +36,7 @@ sub report{
 sub parse{
 
     my $file = shift;       
-    
+    my %lu;
     my $fh = new FileHandle;
     $fh->open($file);
     
@@ -46,17 +46,30 @@ sub parse{
 	next if $line =~ /\#/;
 
 	my @col = split(/\t/, $line);
-
-	if ($col[2] eq 'CDS'){
-	    my ($id) = $col[8] =~ /Parent=(\S+)/;
-	    my $gid;
-	    if($col[8] =~ /Parent=(\S+?)-mRNA/){
-		($gid)  = $col[8] =~ /Parent=(\S+?)-mRNA/;
-	    }
-	    elsif ($col[8] =~ /Parent=(\S+?)-/){
-		($gid)  = $col[8] =~ /Parent=(\S+?)-/;
-	    }
-	    else {die "this happened $col[8]\n";}
+	if ($col[2] eq 'mRNA'){
+	    my ($t) = $col[8] =~ /ID=(\S+?);/;
+	    my ($g) = $col[8] =~ /Parent=(\S+?);/;
+	    $lu{$t} = $g; #this only workd if the mRNA lines are bfore the cds lines
+	}
+	if ($col[2] eq 'CDS' && ($col[8] =~ /Parent=(\S+?);/ || $col[8] =~ /Parent=(\S+)/)){
+	    my $id = $1;
+	    my $gid = $lu{$id};
+	    #if($col[8] =~ /Parent=(\S+?)-mRNA/){
+	    #	($gid)  = $col[8] =~ /Parent=(\S+?)-mRNA/;
+	    #}
+	    #elsif ($col[8] =~/Parent=(transcript:A\S+?);/){
+	    #	
+	    #	($gid) = $col[8]=~/Parent=(transcript:A\S+?);/;
+	    #	$gid =~ s/transcript/gene/;
+	    #	$gid =~ s/_FGT/_FG/;
+	    #}
+	    #elsif ($col[8] =~ /Parent=(\S+?)-/){
+	    #	($gid)  = $col[8] =~ /Parent=(\S+?)-/;
+	    #}
+	    #elsif ($col[8] =~ /Parent=(\S+?)\_/){
+	    #	($gid)  = $col[8] =~ /Parent=(\S+?)\_/;
+	    #}
+	    #else {die "this happened $col[8]\n";}
 	    my $len = $col[4] - $col[3];
 	    $DATA{$gid}{$id} += $len;
 	}

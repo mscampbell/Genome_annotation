@@ -57,8 +57,13 @@ sub filter{
 	    $array[2] eq 'five_prime_UTR'){
 	    my @gone;
 	    my $bool = 0;
-	    my ($ids) = $array[8] =~ /Parent=(\S+);?/; #i'm using an array
-		my @ids_array = split(/,/, $ids);      #because some of these 
+	    my $ids; #i'll put the ids in here once I get them
+	    if ($array[8] =~ /Parent=(\S+?);/ || $array[8] =~ /Parent=(\S+)/){
+		$ids = $1;
+	    }
+	    #my ($ids) = $array[8] =~ /Parent=(\S+?);/; #i'm using an array 
+	    #print STDERR " id:$ids\n";
+	    my @ids_array = split(/,/, $ids);      #because some of these 
 		foreach my $x (@ids_array){            #features have multiple 
 		    if (defined($LU_T{$x})){           #parents 
 			$bool++;
@@ -67,6 +72,7 @@ sub filter{
 			push(@gone, $x);
 		    }
 		}
+	    #print join("\t", @gone)," mike \n";
 	    foreach my $toss (@gone){ #This gets rid of the parent ids that 
 		                      #are not in the transcripts to keep list
 		if ($line =~ /,$toss,/){ 
@@ -78,6 +84,10 @@ sub filter{
 		elsif ($line =~ /=$toss,/){
 		    $line =~ s/$toss,//;
 		}
+		elsif ($line =~ /,$toss;/){
+		    $line =~ s/,$toss;/;/;
+		}
+		
 	    }
 	    print $line."\n" if $bool;
 	}
